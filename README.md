@@ -1,0 +1,1 @@
+# vertica-avro-loader-example
