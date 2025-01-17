@@ -1,0 +1,11 @@
+{
+  "db": {
+    "connectionString": "jdbc:vertica://<verticaConnectionString>",
+    "username": "<vertica-user>",
+    "password": "<vertica-password>",
+    "table": "<table-name>"
+  },
+  "schemaRegistry": {
+    "schemaRegistryUrl": "http://localhost:8081"
+  }
+}

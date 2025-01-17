@@ -1,0 +1,19 @@
+{
+  "type": "record",
+  "namespace": "org.rh.example.avro",
+  "name": "TestDataAvro",
+  "fields": [
+    {
+      "name": "testName",
+      "type": "string"
+    },
+    {
+      "name": "testValue",
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null
+    }
+  ]
+}
