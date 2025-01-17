@@ -4,6 +4,11 @@
   "name": "TestDataAvro",
   "fields": [
     {
+      "name": "eventTimeUtcMs",
+      "type": "long",
+      "default": 0
+    },
+    {
       "name": "testName",
       "type": "string"
     },

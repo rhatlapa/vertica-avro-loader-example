@@ -8,6 +8,7 @@ import java.nio.ByteBuffer;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.Clock;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FAvroParserExample {
 	private static final String TOPIC = "test-topic";
+	private static final Clock CLOCK = Clock.systemUTC();
 
 	public static void main(String[] args) throws SQLException, IOException {
 		var objectMapper = new ObjectMapper()
@@ -55,8 +57,8 @@ public class FAvroParserExample {
 
 			var dataSerializer = new KafkaAvroSerializer(schemaRegistryClient);
 			dataSerializer.configure(Map.of("schema.registry.url", config.schemaRegistry().schemaRegistryUrl()), false);
-			var firstMessage = dataSerializer.serialize(TOPIC, new TestDataAvro("name1", "value1", "unknown1"));
-			var secondMessage = dataSerializer.serialize(TOPIC, new TestDataAvro("name2", null, "unknown2"));
+			var firstMessage = dataSerializer.serialize(TOPIC, testData("name1", "value1"));
+			var secondMessage = dataSerializer.serialize(TOPIC, testData("name2", null));
 			var records = List.of(firstMessage, secondMessage);
 
 			try {
@@ -96,5 +98,13 @@ public class FAvroParserExample {
 	}
 
 
+	private static TestDataAvro testData(String name, String value) {
+		var testData = new TestDataAvro();
+		testData.setTestName(name);
+		testData.setTestValue(value);
+		testData.setUnknownField("unknown value");
+		testData.setEventTimeUtcMs(CLOCK.millis());
+		return testData;
+	}
 
 }
