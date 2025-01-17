@@ -55,8 +55,8 @@ public class FAvroParserExample {
 
 			var dataSerializer = new KafkaAvroSerializer(schemaRegistryClient);
 			dataSerializer.configure(Map.of("schema.registry.url", config.schemaRegistry().schemaRegistryUrl()), false);
-			var firstMessage = dataSerializer.serialize(TOPIC, new TestDataAvro("name1", "value1"));
-			var secondMessage = dataSerializer.serialize(TOPIC, new TestDataAvro("name2", null));
+			var firstMessage = dataSerializer.serialize(TOPIC, new TestDataAvro("name1", "value1", "unknown1"));
+			var secondMessage = dataSerializer.serialize(TOPIC, new TestDataAvro("name2", null, "unknown2"));
 			var records = List.of(firstMessage, secondMessage);
 
 			try {
@@ -80,19 +80,14 @@ public class FAvroParserExample {
 						dataFileWriter.close();
 						try (var is = new ByteArrayInputStream(bout.toByteArray())) {
 							vstream.addStream(is);
-							log.info("Before execute - Rejects {}", vstream.getRejects());
-							log.info("Before execute - Row count {}", vstream.getRowCount());
 							vstream.execute();
 						}
 					}
 				}
-				log.info("Rejects {}", vstream.getRejects());
-				log.info("Row count {}", vstream.getRowCount());
 
-				var rowCount = vstream.finish();
-				log.info("After finish - Rejects {}", vstream.getRejects());
-				log.info("After finish - Row count {}", vstream.getRowCount());
-				log.info("After finish - Row count return {}", rowCount);
+				var finishRowCount = vstream.finish();
+				log.info("Rejects {}", vstream.getRejects());
+				log.info("Row count {}, finish {}", vstream.getRowCount(), finishRowCount);
 
 			} catch (IOException | RestClientException | SQLException e) {
 				throw new RuntimeException(e);
