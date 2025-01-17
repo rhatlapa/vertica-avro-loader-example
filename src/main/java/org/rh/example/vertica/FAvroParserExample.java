@@ -76,7 +76,7 @@ public class FAvroParserExample {
 					DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<>(datumWriter);
 					try (var bout = new ByteArrayOutputStream()) {
 						dataFileWriter.create(schema, bout);
-						dataFileWriter.appendEncoded(ByteBuffer.wrap(Arrays.copyOf(valueAsBytes, valueAsBytes.length)));
+						dataFileWriter.appendEncoded(ByteBuffer.wrap(Arrays.copyOf(ArrayUtils.subarray(valueAsBytes, 5,  valueAsBytes.length), valueAsBytes.length - 5)));
 						dataFileWriter.close();
 						try (var is = new ByteArrayInputStream(bout.toByteArray())) {
 							vstream.addStream(is);
